@@ -1,6 +1,7 @@
 from trainer import Trainer
 from nets import GPT2
 import torch
+import random
 
 
 class Detector:
@@ -8,8 +9,8 @@ class Detector:
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.dictionary_path = dictionary_path
         self.net = GPT2().to(self.device)
-        self.vocab = torch.tensor([[0]]).to(self.device)
-        self.position = torch.tensor([[0]]).to(self.device)
+        self.vocab = torch.tensor([[random.randint(0, 2123)]]).to(self.device)
+        self.position = torch.tensor([[random.randint(0, 200)]]).to(self.device)
         self.net.load_state_dict(torch.load(net_path))
         self.net.eval()
 
@@ -36,6 +37,9 @@ class Detector:
                     print(" ", end="")
                 elif strs[index] == "[START]":
                     print()
+                elif strs[index] == "[END]":
+                    print("end...")
+                    break
                 else:
                     print(strs[index], end="")
 

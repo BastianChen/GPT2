@@ -13,7 +13,7 @@ class GPT2(nn.Module):
         # 用于句子编码
         self.type_embed = nn.Embedding(cfg.type_num, cfg.embed_dim)
         self.block = []
-        for _ in range(6):
+        for _ in range(cfg.block_num):
             self.block.append(Block(True))
         self.drop_layer = nn.Dropout(0.1)
         self.block_layer = nn.Sequential(*self.block)
@@ -72,7 +72,7 @@ class Attention(nn.Module):
     def forward(self, data):
         # n,s,768-->n,s,768*3
         data = self.copy_layer(data)
-        # n,s,768-->n,s,12,64*3
+        # n,s,768*3-->n,s,12,64*3
         data = data.reshape(*data.shape[:-1], cfg.head_num, -1)
         # n,s,12,64*3-->n,12,s,64*3
         data = data.transpose(-2, -3)
